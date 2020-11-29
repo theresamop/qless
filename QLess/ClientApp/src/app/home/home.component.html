@@ -1,0 +1,119 @@
+<div class="p-col-12">
+  <div class="card">
+    <h5>Please scan your Beep Card</h5>
+    <div class="p-fluid p-formgrid p-grid">
+
+      <div class="p-field p-col-12 p-md-12">
+        <input id="cardId" type="text" class="p-inputtext p-component" [(ngModel)]="this.cardId">
+      </div>
+
+    </div>
+
+
+   
+    <div class="row" *ngIf="isShow">
+      <div class="col-md-6">
+        <div class="box box-solid">
+          <div class="box-header with-border">
+            <i class="fa fa-text-width"></i>
+
+            <h3 class="box-title">Description</h3>
+          </div>
+
+          <div class="box-body">
+            <dl>
+              <dt>Id</dt> 
+              <dd>{{qLessModel.id}}</dd>
+              <dt>Balance:</dt>
+              <dd>{{qLessModel.value  | number : '1.2-2'}}</dd>
+              <dt>Serial No</dt>
+              <dd>{{qLessModel.serialNo}}</dd>
+              <dt>Status:</dt>
+              <dd>{{qLessModel.active ? 'Active' : 'Expired' }}</dd>
+            </dl>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-md-6">
+        <div class="box box-solid">
+          <div class="box-header with-border">
+            <i class="fa fa-text-width"></i>
+
+            <h3 class="box-title">You are in {{stnName}} Station</h3>
+
+          </div>
+
+          <div class="box-body" *ngIf="!qLessModel.isEntry">
+            <dl class="dl-horizontal">
+              <dt>Regular Fare: </dt>
+              <dd>{{priceMatrix.price}}</dd>
+              <dt>Discount: </dt>
+              <dd>{{qLessModel.discount | number : '1.2-2'}}</dd>
+            </dl>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="row" *ngIf="isShowRegister">
+      <div class="col-md-6">
+        <div class="box box-solid">
+          <div class="box-header with-border">
+            <i class="fa fa-text-width"></i>
+
+            <h3 class="box-title">Please fill up</h3>
+
+          </div>
+
+          <div class="box-body">
+            <dl>
+              <dt>Senior Citizen  Control Number</dt>
+              <dd>
+                <input type="text" class="p-inputtext p-component" [(ngModel)]="reg.SrCCN">
+              </dd>
+              <dt> PWD ID Number</dt>
+              <dd>
+                <input type="text" class="p-inputtext p-component" [(ngModel)]="reg.PwdId">
+              </dd>
+              <dt>Serial No</dt>
+              <dd>{{qLessModel.serialNo}}</dd>
+            </dl>
+          </div>
+          <div class="box-body">
+            <button (click)="registerCard()" class="p-button-rounded p-button-warning p-ripple p-button p-component">
+              <span class="p-button-label">Save</span><span class="p-ink"></span>
+            </button>
+            <h3 class="box-title">{{txtStatus}}</h3>
+
+          </div>
+        </div>
+
+      </div>
+
+      
+
+    </div>
+  </div>
+
+
+
+</div>
+<div class="p-col-12">
+  
+  <div class="box-body">
+    
+    <button (click)="scanCard()" class="p-button-rounded p-button-warning p-ripple p-button p-component">
+      <span class="p-button-label">Scan Card {{this.isEntry ? 'Entry' : 'Exit'}}</span><span class="p-ink"></span>
+    </button>
+    <button *ngIf="!showRegister" (click)="showRegister()" class="p-button-rounded p-button-warning p-ripple p-button p-component">
+      <span class="p-button-label">Register Card</span><span class="p-ink"></span>
+    </button>
+
+  </div>
+</div>

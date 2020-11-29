@@ -1,9 +1,9 @@
 
 export class QLessRegistration {
-  Id: number;
-  SrCCN: string;
-  PwdId: string;
-  QLessCardSerialNo: string;
-  QLessCardId: number;
+  id: number;
+  srCCN: string;
+  pwdId: string;
+  qLessCardSerialNo: string;
+  qLessCardId: number;
 
 }

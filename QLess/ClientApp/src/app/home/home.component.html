@@ -1,10 +1,10 @@
 <div class="p-col-12">
   <div class="card">
-    <h5>Please scan your Beep Card</h5>
+    <h5>Please scan your QLess Card</h5>
     <div class="p-fluid p-formgrid p-grid">
 
       <div class="p-field p-col-12 p-md-12">
-        <input id="cardId" type="text" class="p-inputtext p-component" [(ngModel)]="this.cardId">
+        <input id="cardId" type="number" class="p-inputtext p-component" [(ngModel)]="this.cardId">
       </div>
 
     </div>
@@ -17,12 +17,12 @@
           <div class="box-header with-border">
             <i class="fa fa-text-width"></i>
 
-            <h3 class="box-title">Description</h3>
+            <h4 class="box-title">Card Information</h4>
           </div>
 
           <div class="box-body">
             <dl>
-              <dt>Id</dt> 
+              <dt>Id</dt>
               <dd>{{qLessModel.id}}</dd>
               <dt>Balance:</dt>
               <dd>{{qLessModel.value  | number : '1.2-2'}}</dd>
@@ -30,6 +30,7 @@
               <dd>{{qLessModel.serialNo}}</dd>
               <dt>Status:</dt>
               <dd>{{qLessModel.active ? 'Active' : 'Expired' }}</dd>
+
             </dl>
           </div>
 
@@ -67,7 +68,7 @@
           <div class="box-header with-border">
             <i class="fa fa-text-width"></i>
 
-            <h3 class="box-title">Please fill up</h3>
+            <h4 class="box-title">Please fill up</h4>
 
           </div>
 
@@ -75,14 +76,13 @@
             <dl>
               <dt>Senior Citizen  Control Number</dt>
               <dd>
-                <input type="text" class="p-inputtext p-component" [(ngModel)]="reg.SrCCN">
+                <input type="text" class="p-inputtext p-component" mask="00-0000-0000" [(ngModel)]="qlessRegister.srCCN" >
               </dd>
               <dt> PWD ID Number</dt>
               <dd>
-                <input type="text" class="p-inputtext p-component" [(ngModel)]="reg.PwdId">
+                <input type="text" class="p-inputtext p-component"  mask="0000-0000-0000" [(ngModel)]="qlessRegister.pwdId">
               </dd>
-              <dt>Serial No</dt>
-              <dd>{{qLessModel.serialNo}}</dd>
+
             </dl>
           </div>
           <div class="box-body">
@@ -107,11 +107,14 @@
 <div class="p-col-12">
   
   <div class="box-body">
-    
+
     <button (click)="scanCard()" class="p-button-rounded p-button-warning p-ripple p-button p-component">
-      <span class="p-button-label">Scan Card {{this.isEntry ? 'Entry' : 'Exit'}}</span><span class="p-ink"></span>
+      <span class="p-button-label">Scan Card</span><span class="p-ink"></span>
     </button>
-    <button *ngIf="!showRegister" (click)="showRegister()" class="p-button-rounded p-button-warning p-ripple p-button p-component">
+    <button (click)="ngOnInit()"  *ngIf="!this.qLessModel.isEntry" class="p-button-rounded p-button-warning p-ripple p-button p-component">
+      <span class="p-button-label">Exit for New Travel</span><span class="p-ink"></span>
+    </button>
+    <button *ngIf="showRegisterBtn && !this.isShowRegister" (click)="showRegister()" class="p-button-rounded p-button-warning p-ripple p-button p-component">
       <span class="p-button-label">Register Card</span><span class="p-ink"></span>
     </button>
 

@@ -11,4 +11,6 @@ export class QLessModel {
   isEntry: boolean;
   serialNo: string;
   discount: number;
+  purchaseDate: Date;
+
 }

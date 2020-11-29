@@ -45,7 +45,7 @@ namespace QLess
         }
         public static void createQLessRegistrationJSON(QLessRegistration[] qLessRegistrationItems)
         {
-            using (StreamWriter sw = System.IO.File.CreateText(qlessfilePath))
+            using (StreamWriter sw = System.IO.File.CreateText(qlessRegfilePath))
             {
 
                 sw.WriteLine(JsonConvert.SerializeObject(qLessRegistrationItems));

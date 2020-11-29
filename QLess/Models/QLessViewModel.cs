@@ -9,5 +9,7 @@ namespace QLess.Models
     {
         public QLessModel QLessModel { get; set; }
         public PriceMatrix PriceMatrix { get; set; }
+
+        public string Status { get; set; }
     }
 }

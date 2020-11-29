@@ -48,6 +48,7 @@ namespace QLess.Controllers
         {
             QLessViewModel viewModel = new QLessViewModel();
             var res = QLessModelsItems.Where(q => q.Id == id).FirstOrDefault();
+            
             ProcessResult(res, stnFrom, line);
             viewModel.QLessModel = res;
             viewModel.PriceMatrix = priceMatrix;
@@ -58,18 +59,29 @@ namespace QLess.Controllers
         public QLessViewModel Register(QLessRegistration qLessRegistration)
         {
             QLessViewModel viewModel = new QLessViewModel();
-            var res = QLessModelsItems.Where(q => q.Id == qLessRegistration.QLessCardId).FirstOrDefault();
-            viewModel.QLessModel = res;
-            QLessRegistration reg = new QLessRegistration()
+            try
             {
-                SrCCN = qLessRegistration.SrCCN,
-                QLessCardSerialNo = res.SerialNo,
-                PwdId = qLessRegistration.PwdId
-            };
+               
+                var res = QLessModelsItems.Where(q => q.Id == qLessRegistration.QLessCardId).FirstOrDefault();
+                viewModel.QLessModel = res;
+                QLessRegistration reg = new QLessRegistration()
+                {
+                    SrCCN = qLessRegistration.SrCCN,
+                    QLessCardSerialNo = res.SerialNo,
+                    PwdId = qLessRegistration.PwdId
+                };
 
-            QLessRegistrationItems.Add(reg);
-            DataUtil.createQLessRegistrationJSON(QLessRegistrationItems.ToArray());
-            return viewModel;
+                QLessRegistrationItems.Add(reg);
+                DataUtil.createQLessRegistrationJSON(QLessRegistrationItems.ToArray());
+                viewModel.Status = "success";
+                return viewModel;
+            }
+            catch(Exception x) {
+                viewModel.Status = "fail";
+                return viewModel;
+            }
+            
+           
         }
         /// <summary>
         /// Calculate and Save Card load and other properties only upon arrival at destination
@@ -79,13 +91,18 @@ namespace QLess.Controllers
         private void ProcessResult(QLessModel res, string stnFrom, string line)
         {
             var isRegistered = QLessRegistrationItems.Any(r => r.QLessCardSerialNo == res.SerialNo);
-            res.noOfUseToday++;
+
             res.Type = isRegistered ? CardType.Discounted : CardType.Regular;
             res.IsEntry = !string.IsNullOrEmpty(stnFrom) ? false : true;
             var cardInfo = GetValueByFromToStn(res, stnFrom, line);
             res.Value = cardInfo.Item1;
             if (!res.IsEntry)
             {
+                if (res.DateLastUsed.Date != DateTime.Today) //reset to 0 for the day
+                {
+                    res.noOfUseToday = 0;
+                }
+                res.noOfUseToday++;
                 res.Value = cardInfo.Item2;
                 QLessModelsItems = QLessModelsItems.Where(c => c.Id != res.Id).ToList();
                 QLessModelsItems.Add(res);

@@ -9,7 +9,7 @@ namespace QLess.Models
     {
         public long Id { get; set; }
         public double Value { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        //public DateTime ExpirationDate { get; set; }
         public string Type { get; set; }
         public int noOfUseToday { get; set; }
         public DateTime DateLastUsed { get; set; }

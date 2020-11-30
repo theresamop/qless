@@ -6,6 +6,7 @@ import { PriceMatrix } from '../entities/PriceMatrix';
 import { QLessRegistration } from '../entities/QLessRegistration';
 import { CardType } from '../entities/enums';
 import { diffBetweenDates, diffMonthsFromPurchaseDate } from '../util/DateUtil';
+import { error } from 'protractor';
 
 
 @Component({
@@ -45,12 +46,9 @@ export class HomeComponent implements OnInit  {
     this.qlessRegister = new QLessRegistration();
    }
 
+
   scanCard(): void {
-    if (this.qLessModel.id  && this.qLessModel.id !== this.cardId) {
-      this.ngOnInit();
-      this.scanCard();
-      return alert("Card used to enter is different. You will be in a new travel now");
-    }
+
     let params = new HttpParams()
       .set("id", this.cardId.toString())
       .set("stnFrom", (this.priceMatrix.stationFr ? this.priceMatrix.stationFr.toString() : ''))
@@ -60,7 +58,7 @@ export class HomeComponent implements OnInit  {
       this.qLessViewModel = result;
       this.priceMatrix = result.priceMatrix;
       this.qLessModel = result.qLessModel;
-      this.qLessModel.active = diffBetweenDates(this.qLessModel.purchaseDate, new Date(), 'years') <= 5;
+      this.qLessModel.active = diffBetweenDates(this.qLessModel.dateLastUsed, new Date(), 'years') <= 5;
       this.stnName = this.qLessModel.isEntry ? this.priceMatrix.stationFrName : this.priceMatrix.stationToName;
       this.isShow = true;
       if (!this.qLessModel.isEntry) {
@@ -71,8 +69,31 @@ export class HomeComponent implements OnInit  {
       if (this.qLessModel.type === CardType.Regular) {
         this.showRegisterBtn = true;
       }
-     
+
     }, error => console.error(error));
+
+  }
+  validateScanCard() {
+    let errMsg = "";
+    let params = new HttpParams()
+      .set("id", this.cardId.toString())
+
+    this.httpClient.get<QLessViewModel>(this.baseUrl + 'qless', { params }).subscribe(result => {
+
+      if (!result.isValid) {
+        this.ngOnInit();
+        return alert(result.status);
+      }
+      if (result.isValid && this.qLessModel.id && this.qLessModel.id !== this.cardId) {
+        this.ngOnInit();
+        this.scanCard();
+        return alert("Card used to enter is different. You will be in a new travel now");
+        
+      } else if (result.isValid) {
+        this.scanCard();
+      }
+    }, error => console.error(error));
+    return errMsg;
   }
   showRegister(): void {
 
@@ -81,6 +102,7 @@ export class HomeComponent implements OnInit  {
   registerCard(): void {
     const errMsg = this.validRegister();
     if (errMsg === "") {
+
       this.qlessRegister.qLessCardSerialNo = this.qLessModel.serialNo;
       this.qlessRegister.qLessCardId = this.qLessModel.id;
 

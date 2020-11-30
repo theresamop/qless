@@ -11,5 +11,6 @@ namespace QLess.Models
         public PriceMatrix PriceMatrix { get; set; }
 
         public string Status { get; set; }
+        public bool IsValid { get; set; }
     }
 }

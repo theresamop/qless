@@ -23,11 +23,11 @@ namespace QLess
         {
             var QLessItems1 = new QLessModel[]
                {
-                   new QLessModel() { Id = 1, DateLastUsed = DateTime.Today, Value = 100, ExpirationDate = DateTime.Today.AddYears(5), noOfUseToday = 1, Type = CardType.Discounted, PurchaseDate = DateTime.Now, SerialNo="1A"},
-                   new QLessModel() { Id = 2, DateLastUsed = DateTime.Today.AddDays(-30), Value = 100, ExpirationDate = DateTime.Today.AddDays(-30).AddYears(5), noOfUseToday = 5 , Type = CardType.Regular, PurchaseDate = DateTime.Now,  SerialNo="2B"},
-                   new QLessModel() { Id = 3, DateLastUsed = DateTime.Today.AddYears(-5), Value = 100, ExpirationDate = DateTime.Today.AddYears(-5).AddYears(5), noOfUseToday = 1, Type = CardType.Discounted, PurchaseDate = DateTime.Now, SerialNo="3C"},
-                   new QLessModel() { Id = 4, DateLastUsed = DateTime.Today.AddYears(-6), Value = 100, ExpirationDate =  DateTime.Today.AddYears(-6).AddYears(5), noOfUseToday = 3, Type = CardType.Discounted, PurchaseDate = DateTime.Now, SerialNo="4D"},
-                   new QLessModel() { Id = 5, DateLastUsed = DateTime.Today, Value = 100, ExpirationDate = DateTime.Today.AddYears(5), noOfUseToday = 1, Type = CardType.Regular, PurchaseDate = DateTime.Now, SerialNo="5E"},
+                   new QLessModel() { Id = 1, DateLastUsed = DateTime.Today, Value = 100, noOfUseToday = 1, Type = CardType.Discounted, PurchaseDate = DateTime.Now, SerialNo="1A"},
+                   new QLessModel() { Id = 2, DateLastUsed = DateTime.Today.AddDays(-30), Value = 100,  noOfUseToday = 5 , Type = CardType.Regular, PurchaseDate = DateTime.Now,  SerialNo="2B"},
+                   new QLessModel() { Id = 3, DateLastUsed = DateTime.Today.AddYears(-5), Value = 100, noOfUseToday = 1, Type = CardType.Discounted, PurchaseDate = DateTime.Now, SerialNo="3C"},
+                   new QLessModel() { Id = 4, DateLastUsed = DateTime.Today.AddYears(-6), Value = 100,  noOfUseToday = 3, Type = CardType.Discounted, PurchaseDate = DateTime.Now, SerialNo="4D"},
+                   new QLessModel() { Id = 5, DateLastUsed = DateTime.Today, Value = 100, noOfUseToday = 1, Type = CardType.Regular, PurchaseDate = DateTime.Now, SerialNo="5E"},
                };
             using (StreamWriter sw = System.IO.File.CreateText(qlessfilePath))
             {
@@ -45,10 +45,24 @@ namespace QLess
         }
         public static void createQLessRegistrationJSON(QLessRegistration[] qLessRegistrationItems)
         {
+            var QLessRegistrationItems1 = new QLessRegistration[]
+              {
+                  
+                   new QLessRegistration() { Id = 1, PwdId = "1234567891233", QLessCardId = 1, QLessCardSerialNo = "1A", SrCCN = "1223456789"  },
+                   new QLessRegistration() { Id = 1, PwdId = "1234567891234", QLessCardId = 1, QLessCardSerialNo = "2B", SrCCN = "1223456789"  },
+                   new QLessRegistration() { Id = 1, PwdId = "3333333333", QLessCardId = 1, QLessCardSerialNo = "3C", SrCCN = "6666666"  },
+              };
             using (StreamWriter sw = System.IO.File.CreateText(qlessRegfilePath))
             {
+                if (qLessRegistrationItems != null && qLessRegistrationItems.Any())
+                {
+                    sw.WriteLine(JsonConvert.SerializeObject(qLessRegistrationItems));
+                }
+                else
+                {
+                    sw.WriteLine(JsonConvert.SerializeObject(QLessRegistrationItems1));
+                }
 
-                sw.WriteLine(JsonConvert.SerializeObject(qLessRegistrationItems));
             }
 
         }

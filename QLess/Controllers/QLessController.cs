@@ -32,7 +32,7 @@ namespace QLess.Controllers
         {
             _logger = logger;
             //DataUtil.createQLessJSON(null);
-            //DataUtil.createQLessRegistrationJSON();
+            //DataUtil.createQLessRegistrationJSON(null);
             //DataUtil.createPriceMatrixJSON();
 
             QLessModelsItems = DataUtil.OpenQLessJsonData().ToList();
@@ -46,15 +46,39 @@ namespace QLess.Controllers
         [HttpGet]
         public QLessViewModel Get(int id, string stnFrom, string line)
         {
+           
             QLessViewModel viewModel = new QLessViewModel();
             var res = QLessModelsItems.Where(q => q.Id == id).FirstOrDefault();
-            
-            ProcessResult(res, stnFrom, line);
-            viewModel.QLessModel = res;
-            viewModel.PriceMatrix = priceMatrix;
+            var errMsg = Validate(res);
+            if (string.IsNullOrEmpty(errMsg))
+            {
+                ProcessResult(res, stnFrom, line);
+                viewModel.QLessModel = res;
+                viewModel.PriceMatrix = priceMatrix;
+                viewModel.IsValid = true;
+            } else
+            {
+                viewModel.QLessModel = res;
+                viewModel.Status = errMsg;
+                viewModel.PriceMatrix = new PriceMatrix();
+                viewModel.IsValid = false;
+            }
 
             return viewModel;
         }
+
+
+        public string Validate(QLessModel res)
+        {
+            var errMsg = "";
+         
+            if (DateHelper.CardAge(res.DateLastUsed) > 5)
+            {
+                errMsg = "Card has expired!";
+            }
+            return errMsg;
+        }
+
         [HttpPost]
         public QLessViewModel Register(QLessRegistration qLessRegistration)
         {
@@ -64,11 +88,13 @@ namespace QLess.Controllers
                
                 var res = QLessModelsItems.Where(q => q.Id == qLessRegistration.QLessCardId).FirstOrDefault();
                 viewModel.QLessModel = res;
+                var maxId = (QLessRegistrationItems !=null && QLessRegistrationItems.Any()) ? QLessRegistrationItems.Max(c => c.Id) + 1 : 1;
                 QLessRegistration reg = new QLessRegistration()
                 {
                     SrCCN = qLessRegistration.SrCCN,
                     QLessCardSerialNo = res.SerialNo,
-                    PwdId = qLessRegistration.PwdId
+                    PwdId = qLessRegistration.PwdId,
+                    Id = maxId
                 };
 
                 QLessRegistrationItems.Add(reg);

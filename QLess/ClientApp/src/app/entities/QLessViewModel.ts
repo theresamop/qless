@@ -5,4 +5,5 @@ export class QLessViewModel {
   qLessModel: QLessModel;
   priceMatrix: PriceMatrix;
   status: string;
+  isValid: boolean;
 }
